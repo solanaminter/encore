@@ -1,5 +1,7 @@
 # Encore
 
+**Live Demo:** https://encore-beta-ten.vercel.app
+
 A taste-matched night out for isolated older adults — Qloo Agentic Hackathon entry
 (Purple Castle Ventures).
 
