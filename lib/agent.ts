@@ -189,7 +189,11 @@ export function pickDining(
   const why = [
     `Qloo affinity ${best.c.affinity.toFixed(4)} on cuisine signals: ${profile.signals.cuisine_tag_urns.join(", ")}`,
     best.dist != null
-      ? `${best.dist.toFixed(1)} km from ${venue.name} — one short hop, no second drive`
+      ? `${best.dist.toFixed(1)} km from ${venue.name}${
+          best.dist > profile.constraints.transport_radius_km
+            ? ` — outside the ${profile.constraints.transport_radius_km} km travel comfort zone, flagged below`
+            : " — inside the travel comfort zone"
+        }`
       : "Distance unavailable — chosen on taste affinity",
     usedFallback
       ? `No food candidate keeps the evening under $${budget} — chose the closest taste match and flagged the overage`
@@ -248,6 +252,13 @@ export function composeNightOut(profile: TasteProfile, venues: PlaceSeed[], dini
   const practicalityRationale = [
     ...v.why.slice(0, 1).map(() => `Venue shortlist re-ranked by taste affinity after mobility/noise filters.`),
     ...v.filteredOut.map((f) => `${f.name}: ${f.reason}.`),
+    ...(d.distanceKm != null && d.distanceKm > profile.constraints.transport_radius_km
+      ? [
+          `Dinner-to-show distance ${d.distanceKm.toFixed(1)} km exceeds the ${
+            profile.constraints.transport_radius_km
+          } km travel comfort zone — flagged, not hidden; the taste match was kept over a closer, weaker match.`,
+        ]
+      : []),
     ...(fits
       ? [`Evening est. $${eveningCost} vs $${profile.constraints.budget_usd} budget — fits.`]
       : [
@@ -300,7 +311,7 @@ export function composeNightOut(profile: TasteProfile, venues: PlaceSeed[], dini
       {
         time: "10:30 PM",
         title: "Ride home",
-        detail: `One booking, ~${profile.constraints.transport_radius_km} km radius — the whole evening stays inside ${profile.name}'s travel comfort zone.`,
+        detail: `One booking — dinner, show, and ride home handled as a single evening (travel comfort zone: ~${profile.constraints.transport_radius_km} km).`,
       },
     ],
     budget: { estimate_usd: eveningCost, cap_usd: profile.constraints.budget_usd, fits },
