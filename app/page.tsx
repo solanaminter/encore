@@ -25,7 +25,7 @@ const LOOP_STAGES = [
   { title: "Qloo venue query", body: "Insights API with taste signals + genre tags. Returns real rooms with affinity scores." },
   { title: "Practicality filter", body: "Mobility, noise, and budget constraints re-rank the shortlist. Nothing silent — over-budget is flagged." },
   { title: "Dining query", body: "Cuisine signals near the venue. Closest taste-match that keeps the evening on budget." },
-  { title: "One evening", body: "A single Saturday card: dinner, show, ride home. Nothing surfaces when affinity clears no bar." },
+  { title: "One evening", body: "A single Saturday card: dinner, show, ride home. Nothing surfaces when nothing clears the bar." },
 ];
 
 const GENERIC_PLAN = [
