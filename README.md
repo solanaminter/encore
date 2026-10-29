@@ -23,8 +23,10 @@ Qloo is load-bearing: remove it and the matching is vibes.
 ## Status
 
 Day-1 API recon complete (2026-10-19): venue and dining legs proven Qloo-native
-against the hackathon API — see `../DAY1_RESULTS.md`. Persona seed caches in
-`../seeds/`.
+against the hackathon API. The slimmed Day-1 Qloo records ship in this repo
+in `data/slim.json` (built by `scripts/slim-seeds.mjs`, served via
+`lib/seeds.ts`); persona results ship from those cached records, and live
+calls refresh them on demand.
 
 ## Quick start
 
@@ -42,4 +44,6 @@ seed files; live calls refresh them on demand.
 
 ## Taste-profile schema
 
-See `../seeds/taste-profile.schema.json`.
+Persona taste profiles are defined in `lib/personas.ts` (artists, films,
+cuisines, plus mobility, budget, and transport-radius constraints) and matched
+against the cached Qloo records in `data/slim.json`.
