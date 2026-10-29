@@ -23,7 +23,8 @@ Qloo backend, calling the raw REST API.
 3. The serverless route still satisfies the security constraint the kit cares
    about: the key lives in a server-side env var and the browser never sees it.
 4. Quota protection comes from a server-side cache, not from infrastructure:
-   persona results are pre-computed and cached once (`../seeds/`), served from
+   persona results are pre-computed and cached once (`data/slim.json`, via
+   `lib/seeds.ts`), served from
    the route; live calls are bounded (one insights call per user action) and
    cached in-memory with a TTL.
 5. The harness stays a **dev-time** tool: `@qloo/qloo-harness` is used for recon,
