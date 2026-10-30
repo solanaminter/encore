@@ -48,6 +48,25 @@ export function isFoodPlace(seed: PlaceSeed): boolean {
   return FOOD_KEYWORDS.some((k) => h.includes(k));
 }
 
+// Theme-park / cartoon-replica attractions are a hard exclusion, not a
+// soft filter: without it, the "bar" rescue below lets a Simpsons replica
+// bar through as a live room (Robert's Day-1 top pick was Moe's Tavern,
+// tagged cartoon_replica + theme_park_property + amusement_park, i.e. the
+// Universal Studios Springfield replica — a bar, not a show). A hard
+// exclusion cannot be rescued by a room-signal tag.
+const THEME_PARK_EXCLUSIONS = [
+    "theme_park",
+    "amusement_park",
+    "cartoon_replica",
+    "animated_television",
+    "immersive_theme_park_attraction",
+  ];
+
+export function isThemeParkReplica(seed: PlaceSeed): boolean {
+    const h = tagHaystack(seed);
+    return THEME_PARK_EXCLUSIONS.some((k) => h.includes(k));
+}
+
 // A venue candidate must be a plausible live room. Without a genre filter tag
 // (Robert's profile), Qloo returns landmarks and donut shops — the agent
 // drops the obvious non-rooms and says so.
@@ -100,6 +119,13 @@ export function pickVenue(profile: TasteProfile, candidates: PlaceSeed[]): Venue
   const noiseModerate = profile.constraints.noise_tolerance.toLowerCase() === "moderate";
 
   const eligible = candidates.filter((c) => {
+    if (isThemeParkReplica(c)) {
+            filteredOut.push({
+                      name: c.name,
+                      reason: "removed: theme-park / cartoon-replica attraction — not a live room",
+            });
+            return false;
+    }
     if (!isPlausibleLiveRoom(c)) {
       filteredOut.push({
         name: c.name,
